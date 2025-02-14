@@ -23,7 +23,8 @@
 <script setup>
 import { computed } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
-import { gql } from '@apollo/client';
+import gql from "graphql-tag";
+
 
 // Define the GraphQL query
 const GET_ALL_BOOKS = gql`
@@ -49,6 +50,7 @@ const { result, loading, error } = useQuery(GET_ALL_BOOKS);
 // Extract books from query result
 const books = computed(() => result.value?.getAllBooks || []);
 </script>
+
 
 <style scoped>
 .page-title {
