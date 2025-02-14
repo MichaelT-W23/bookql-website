@@ -1,16 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from '../views/Home.vue';
-import SecondPage from '../views/SecondPage.vue';
+import Books from '../views/Books.vue';
+import Authors from '../views/Authors.vue';
+import Genres from '../views/Genres.vue';
+import AddBook from '../views/AddBook.vue';
+import AddAuthor from '../views/AddAuthor.vue';
 
 const routes = [
 	{
 		path: '/',
-		component: Home
+		component: Books
 	},
 	{
-		path: '/second-page',
-		component: SecondPage
+		path: '/authors',
+		component: Authors
+	},
+	{
+		path: '/genres',
+		component: Genres
+	},
+	{
+		path: '/add-book',
+		component: AddBook
+	},
+	{
+		path: '/add-author',
+		component: AddAuthor
 	}
 ]
 
