@@ -10,11 +10,14 @@
       {{ showBooks ? 'Hide Books' : 'See Books' }}
     </button>
 
-    <ul v-if="showBooks" class="book-list">
-      <li v-for="book in details.books" :key="book.id" class="book-item">
-        <strong>• {{ book.title }}</strong> ({{ book.publicationYear }}) - {{ book.genre }}
-      </li>
-    </ul>
+    <div v-if="showBooks">
+      <ul v-if="details.books && details.books.length" class="book-list">
+        <li v-for="book in details.books" :key="book.id" class="book-item">
+          <strong>• {{ book.title }}</strong> ({{ book.publicationYear }}) - {{ book.genre }}
+        </li>
+      </ul>
+      <p v-else class="no-books-message">No books were found for this author.</p>
+    </div>
   </div>
 </template>
 
@@ -79,5 +82,10 @@ const toggleBooks = () => {
   font-size: 14px;
   color: #444;
   padding: 5px 0;
+}
+
+.no-books-message {
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

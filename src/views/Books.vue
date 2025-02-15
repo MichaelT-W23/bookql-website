@@ -89,6 +89,7 @@ const books = computed(() => result.value?.getAllBooks || []);
   list-style: none;
   max-width: 800px; 
   width: 100%;
+  padding-bottom: 100px;
 }
 
 .book-item {
