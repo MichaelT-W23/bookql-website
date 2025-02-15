@@ -96,6 +96,7 @@ onMounted(() => {
   list-style: none;
   max-width: 800px;
   width: 100%;
+  padding-bottom: 100px;
 }
 
 .author-item {
