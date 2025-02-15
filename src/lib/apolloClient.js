@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-const graphqlEndpoint = 'http://127.0.0.1:8000/graphql';
+const graphqlEndpoint = 'https://api.bookql.com/graphql';
 
 const apolloClient = new ApolloClient({
   uri: graphqlEndpoint,
