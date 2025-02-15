@@ -6,7 +6,6 @@ import { provideApolloClient } from '@vue/apollo-composable';
 
 const app = createApp(App);
 
-// Provide Apollo Client globally
 provideApolloClient(apolloClient);
 
 app.use(router).mount('#app');

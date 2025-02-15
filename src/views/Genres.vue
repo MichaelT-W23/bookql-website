@@ -10,13 +10,10 @@
       </option>
     </select>
 
-    <!-- Show loading state -->
     <p v-if="loading" class="loading-text">Loading books...</p>
 
-    <!-- Show error state -->
     <p v-if="error" class="error-text">Error loading books: {{ error.message }}</p>
 
-    <!-- Display books -->
     <ul v-if="books.length" class="book-list">
       <li v-for="book in books" :key="book.id" class="book-item">
         <BookCard :title="book.title" :body="book" />

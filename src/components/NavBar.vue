@@ -45,7 +45,7 @@ const links = ref([
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Ensures vertical centering */
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }

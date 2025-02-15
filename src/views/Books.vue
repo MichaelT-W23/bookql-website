@@ -96,4 +96,5 @@ const books = computed(() => result.value?.getAllBooks || []);
   display: flex;
   justify-content: center;
 }
+
 </style>

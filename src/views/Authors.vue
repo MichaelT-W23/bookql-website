@@ -14,6 +14,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
@@ -101,4 +102,5 @@ onMounted(() => {
   display: flex;
   justify-content: center;
 }
+
 </style>

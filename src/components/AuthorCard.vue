@@ -21,6 +21,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref } from 'vue';
 
@@ -34,7 +35,9 @@ const showBooks = ref(false);
 const toggleBooks = () => {
   showBooks.value = !showBooks.value;
 };
+
 </script>
+
 
 <style scoped>
 .author-card {
