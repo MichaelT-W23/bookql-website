@@ -1,6 +1,6 @@
 # bookql-website
-## [Link to Website]()
-This is the website for the [BookQL-Api](https://michaelt-w23.github.io/bookql-website/).
+## [Link to Website](https://michaelt-w23.github.io/bookql-website/)
+This is the website for the [BookQL-Api](https://api.bookql.com/).
 
 ## Technologies Used
 - Vue
