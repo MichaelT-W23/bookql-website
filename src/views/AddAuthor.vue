@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="page-title">🖋️ Add a New Author</h1>
-    
+
     <form @submit.prevent="submitAuthor" class="author-form">
       <label>
         Name:
@@ -12,6 +12,7 @@
         Age:
         <input v-model.number="age" type="number" required />
       </label>
+      <p v-if="ageError" class="error-text">{{ ageError }}</p>
 
       <label>
         Nationality:
@@ -54,8 +55,21 @@ const { mutate: createAuthor } = useMutation(CREATE_AUTHOR, {
   }
 });
 
+const ageError = computed(() => {
+  if (age.value !== null && (age.value < 10 || age.value > 110)) {
+    return "Age must be between 10 and 110.";
+  }
+  return "";
+});
+
 const isValid = computed(() => {
-  return name.value.trim() && age.value && nationality.value.trim();
+  return (
+    name.value.trim() &&
+    age.value !== null &&
+    age.value >= 10 &&
+    age.value <= 110 &&
+    nationality.value.trim()
+  );
 });
 
 const submitAuthor = async () => {
@@ -73,7 +87,6 @@ const submitAuthor = async () => {
     name.value = "";
     age.value = null;
     nationality.value = "";
-
     error.value = null;
   } catch (err) {
     error.value = err;
