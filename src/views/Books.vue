@@ -72,7 +72,7 @@ const books = computed(() => result.value?.getAllBooks || []);
 
 .loading-text {
   font-size: 16px;
-  color: #666;
+  color: #7b7b7b;
 }
 
 .error-text {

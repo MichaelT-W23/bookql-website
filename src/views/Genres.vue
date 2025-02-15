@@ -136,7 +136,7 @@ watch(selectedGenre, async (newGenre) => {
 
 .loading-text {
   font-size: 16px;
-  color: #666;
+  color: #7b7b7b;
 }
 
 .error-text {
@@ -159,6 +159,7 @@ watch(selectedGenre, async (newGenre) => {
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
+  padding-bottom: 100px;
 }
 
 .book-item {

@@ -15,6 +15,7 @@
   </nav>
 </template>
 
+
 <script setup>
 import { ref } from 'vue';
 
@@ -27,6 +28,7 @@ const links = ref([
 ]);
 
 </script>
+
 
 <style scoped>
 .navbar {

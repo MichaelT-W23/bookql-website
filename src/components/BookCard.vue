@@ -36,10 +36,11 @@ defineProps({
 .book-card:hover {
   transform: translateY(-5px);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+  cursor: default;
 }
 
 .book-title-container {
-  background: #6CC0A0;
+  background: #5ea98c;
   padding: 12px;
 }
 
@@ -47,7 +48,8 @@ defineProps({
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  color: #fff;
+  /* color: #fff; */
+  color: black;
   margin: 0;
 }
 
