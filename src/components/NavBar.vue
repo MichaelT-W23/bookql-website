@@ -11,11 +11,14 @@
           {{ link.name }}
         </router-link>
       </div>
-      <button class="search-button" @click="handleSearch">
+      <button class="search-button" @click="showModal = true">
         <font-awesome-icon icon="search" />
       </button>
     </div>
   </nav>
+
+  <!-- Modal -->
+  <SearchModal v-if="showModal" @close="showModal = false" />
 </template>
 
 <script setup>
@@ -23,6 +26,7 @@ import { ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import SearchModal from './SearchModal.vue'; // Import the modal component
 
 library.add(faSearch);
 
@@ -34,9 +38,7 @@ const links = ref([
   { name: 'Add Author 🖋️', path: '/add-author' }
 ]);
 
-const handleSearch = () => {
-  console.log("Search pressed");
-};
+const showModal = ref(false);
 </script>
 
 <style scoped>
@@ -57,13 +59,12 @@ const handleSearch = () => {
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* Center everything horizontally */
+  justify-content: center;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  position: relative; /* Helps position the search button */
+  position: relative;
 }
-
 
 .nav-links {
   display: flex;
