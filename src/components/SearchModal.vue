@@ -1,30 +1,71 @@
 <template>
   <div class="modal-overlay" @click.self="$emit('close')">
     <div class="modal-content">
-      <button class="close-button" @click="$emit('close')">✖</button>
-      <h2>Search</h2>
-      <input
-        v-model="searchQuery"
-        type="text"
-        class="search-input"
-        placeholder="Search for books, authors..."
-      />
-      <button class="search-submit" @click="performSearch">Search</button>
+      <div class="modal-header">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="search-input"
+          placeholder="Search by title or author..."
+        />
+        <button class="close-button" @click="$emit('close')">
+          <font-awesome-icon :icon="faTimes" />
+        </button>
+      </div>
+      <div class="separator"></div> 
+      <div v-if="filteredBooks.length" class="results">
+        <ul>
+          <li v-for="book in limitedBooks" :key="book.id">
+            <strong>{{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
+          </li>
+        </ul>
+      </div>
+      <p v-else-if="searchPerformed">No results found.</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
+import { useQuery } from '@vue/apollo-composable';
+import gql from "graphql-tag";
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-// Define emitted event
+library.add(faTimes);
+
 defineEmits(['close']);
 
-const searchQuery = ref('');
+const searchQuery = ref("");
+const searchPerformed = ref(false);
 
-const performSearch = () => {
-  console.log("Searching for:", searchQuery.value);
-};
+const GET_ALL_BOOKS = gql`
+  query {
+    getAllBooks {
+      id
+      title
+      publicationYear
+      genre
+      author {
+        name
+      }
+    }
+  }
+`;
+
+const { result } = useQuery(GET_ALL_BOOKS);
+
+const filteredBooks = computed(() => {
+  if (!result.value || !searchQuery.value) return [];
+  return result.value.getAllBooks.filter(book => 
+    book.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    book.author.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
+
 </script>
 
 <style scoped>
@@ -43,43 +84,72 @@ const performSearch = () => {
 
 .modal-content {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  border-radius: 8px; /* All corners rounded */
   width: 400px;
+  height: 500px;
   text-align: center;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
 }
 
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px; /* Adjusted spacing */
 }
 
 .search-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.search-submit {
-  margin-top: 10px;
-  background: #C06C84;
-  color: white;
+  flex-grow: 1;
+  padding: 8px;
   border: none;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  width: 100%;
+  outline: none;
+  font-size: 18px;
 }
 
-.search-submit:hover {
-  background: #F4A261;
+.close-button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.close-button svg {
+  color: #333; 
+}
+
+.close-button:hover svg {
+  color: #C06C84;
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background: #ddd;
+  margin: 0;
+}
+
+.results {
+  margin-top: 15px;
+  text-align: left;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.results ul {
+  list-style: none;
+  padding: 0;
+}
+
+.results li {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  font-size: 18px;
 }
 </style>
