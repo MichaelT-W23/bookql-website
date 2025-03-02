@@ -11,13 +11,20 @@
           {{ link.name }}
         </router-link>
       </div>
+      <button class="search-button" @click="handleSearch">
+        <font-awesome-icon icon="search" />
+      </button>
     </div>
   </nav>
 </template>
 
-
 <script setup>
 import { ref } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+library.add(faSearch);
 
 const links = ref([
   { name: 'Books 📚', path: '/' },
@@ -27,8 +34,10 @@ const links = ref([
   { name: 'Add Author 🖋️', path: '/add-author' }
 ]);
 
+const handleSearch = () => {
+  console.log("Search pressed");
+};
 </script>
-
 
 <style scoped>
 .navbar {
@@ -39,16 +48,22 @@ const links = ref([
   top: 0;
   left: 0;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 
 .nav-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100%;
+  justify-content: center; /* Center everything horizontally */
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative; /* Helps position the search button */
 }
+
 
 .nav-links {
   display: flex;
@@ -57,7 +72,7 @@ const links = ref([
 }
 
 .nav-link {
-  padding: 12px 20px;
+  padding: 12px 10px;
   font-size: 20px;
   font-weight: 600;
   color: #f1f1f1;
@@ -75,4 +90,18 @@ const links = ref([
   background: #F4A261;
 }
 
+.search-button {
+  background: none;
+  border: none;
+  color: #f1f1f1;
+  font-size: 21px;
+  margin-left: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.search-button:hover {
+  background-color: #F4A261;
+}
 </style>
