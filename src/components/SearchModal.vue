@@ -15,8 +15,8 @@
       <div class="separator"></div> 
       <div v-if="filteredBooks.length" class="results">
         <ul>
-          <li v-for="book in limitedBooks" :key="book.id">
-            <strong>{{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
+          <li v-for="book in filteredBooks" :key="book.id">
+            <strong>📘 {{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
           </li>
         </ul>
       </div>
@@ -35,6 +35,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(faTimes);
+
+// 📘📕📗📙
 
 defineEmits(['close']);
 
@@ -64,8 +66,6 @@ const filteredBooks = computed(() => {
     book.author.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
-
-const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
 
 </script>
 
