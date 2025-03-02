@@ -16,11 +16,11 @@
       <div v-if="filteredBooks.length" class="results">
         <ul>
           <li v-for="book in filteredBooks" :key="book.id">
-            <strong>📘 {{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
+            <strong>📚 {{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
           </li>
         </ul>
       </div>
-      <p v-else-if="searchPerformed">No results found.</p>
+      <p v-else-if="searchPerformed" class="no-results">No results found.</p>
     </div>
   </div>
 </template>
@@ -34,9 +34,9 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faTimes);
+//📗📙📕📘📚
 
-// 📘📕📗📙
+library.add(faTimes);
 
 defineEmits(['close']);
 
@@ -87,7 +87,7 @@ const filteredBooks = computed(() => {
 .modal-content {
   background: white;
   border-radius: 12px;
-  width: 450px; 
+  width: 450px;
   height: 300px;
   text-align: center;
   position: relative;
@@ -112,6 +112,7 @@ const filteredBooks = computed(() => {
   border: none;
   outline: none;
   font-size: 16px;
+  border-radius: 4px;
 }
 
 .close-button {
@@ -132,10 +133,10 @@ const filteredBooks = computed(() => {
 
 .separator {
   width: 100%;
-  height: 1px;
+  height: 2px;
   background: #ddd;
   margin: 0;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .results {
@@ -152,11 +153,19 @@ const filteredBooks = computed(() => {
 }
 
 .results li {
-  background: #f9f9f9;
+  /* background: #F4A261; */
+  background: #5FA8D3;
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 4px;
   font-size: 16px;
+  color: black;
+  font-weight: bold;
+}
+
+.no-results {
+  color: teal;
+  font-weight: bold;
 }
 
 </style>
