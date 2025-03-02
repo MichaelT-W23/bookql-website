@@ -25,6 +25,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
@@ -68,6 +69,7 @@ const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
 
 </script>
 
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -84,14 +86,16 @@ const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
 
 .modal-content {
   background: white;
-  border-radius: 8px; /* All corners rounded */
-  width: 400px;
-  height: 500px;
+  border-radius: 12px;
+  width: 450px; 
+  height: 300px;
   text-align: center;
   position: relative;
   display: flex;
   flex-direction: column;
-  font-size: 18px;
+  font-size: 16px;
+  padding: 15px;
+  overflow: hidden;
 }
 
 .modal-header {
@@ -99,21 +103,21 @@ const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 10px; /* Adjusted spacing */
+  padding: 10px;
 }
 
 .search-input {
   flex-grow: 1;
-  padding: 8px;
+  padding: 6px;
   border: none;
   outline: none;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .close-button {
   background: none;
   border: none;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
   margin-left: 10px;
 }
@@ -131,25 +135,28 @@ const limitedBooks = computed(() => filteredBooks.value.slice(0, 5));
   height: 1px;
   background: #ddd;
   margin: 0;
+  flex-shrink: 0; 
 }
 
 .results {
-  margin-top: 15px;
+  margin-top: 10px;
   text-align: left;
-  max-height: 200px;
+  max-height: 210px;
   overflow-y: auto;
 }
 
 .results ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .results li {
   background: #f9f9f9;
-  padding: 12px;
+  padding: 10px;
   border-radius: 4px;
-  margin-bottom: 5px;
-  font-size: 18px;
+  margin-bottom: 4px;
+  font-size: 16px;
 }
+
 </style>
