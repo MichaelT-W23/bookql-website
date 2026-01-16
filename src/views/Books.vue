@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="page-title">📚 Explore Our Books</h1>
+    <h1 class="page-title">📚 Explore Our Books1</h1>
 
     <p v-if="loading" class="loading-text">Loading books...</p>
 
