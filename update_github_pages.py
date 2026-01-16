@@ -6,10 +6,8 @@ def run(cmd):
     print(c(f"> {cmd}", "cyan"))
     os.system(cmd)
 
-process = subprocess.run('git status', shell=True, capture_output=True, text=True)
-output = process.stdout
-
-branch = repr(output).split("\\n")[0].replace("'On branch ", "").strip()
+process = subprocess.run('git branch --show-current', shell=True, capture_output=True, text=True)
+branch = process.stdout.strip()
 
 print('On branch ', end="")
 
@@ -33,8 +31,14 @@ run('git add .')
 run(f'git commit -m "{commit_msg}" || true')
 run('git push origin main')
 
+# Clean old build
+run('rm -rf dist')
+
 # Build
 run('npm run build')
+
+# Verify build output
+run('ls dist/assets')
 
 # SPA fallback
 run('cp dist/index.html dist/404.html')
