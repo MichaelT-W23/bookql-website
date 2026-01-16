@@ -2,6 +2,8 @@ import os
 import subprocess
 from termcolor import colored as c
 import sys
+import tempfile
+import shutil
 
 def run(cmd, critical=False):
     print(c(f"> {cmd}", "cyan"))
@@ -10,16 +12,12 @@ def run(cmd, critical=False):
         print(c("\n❌ Command failed, aborting deploy.\n", "red"))
         sys.exit(1)
 
-process = subprocess.run('git branch --show-current', shell=True, capture_output=True, text=True)
-branch = process.stdout.strip()
+# Ensure on main
+branch = subprocess.run('git branch --show-current', shell=True, capture_output=True, text=True).stdout.strip()
+print("On branch", branch)
 
-print('On branch ', end="")
-
-if branch == 'main':
-    print(c(branch, 'green'))
-else:
-    print(c(branch, 'red'))
-    print('Switch to main branch before deploying.')
+if branch != "main":
+    print(c("Switch to main before deploying.", "red"))
     sys.exit(1)
 
 commit_msg = input("Enter your commit message: ")
@@ -29,40 +27,41 @@ run('git add .', critical=True)
 run(f'git commit -m "{commit_msg}" || true')
 run('git push origin main', critical=True)
 
-# Clean old build
-run('rm -rf dist', critical=True)
-
 # Build
 run('npm run build', critical=True)
 
-# Verify output
+# Verify build
 if not os.path.exists('dist/assets'):
-    print(c("\n❌ Build failed: dist/assets missing\n", "red"))
+    print(c("❌ Build failed: dist/assets missing", "red"))
     sys.exit(1)
 
 assets = os.listdir('dist/assets')
 js_files = [f for f in assets if f.endswith('.js')]
-
 if not js_files:
-    print(c("\n❌ Build failed: JS bundle missing\n", "red"))
+    print(c("❌ Build failed: JS bundle missing", "red"))
     sys.exit(1)
 
-print(c(f"\n✔ JS bundle found: {js_files[0]}", "green"))
+print(c(f"✔ JS bundle found: {js_files[0]}", "green"))
 
-# SPA fallback
+# SPA fallback + CNAME
 run('cp dist/index.html dist/404.html', critical=True)
-
-# CNAME
 run('echo "vue.bookql.com" > dist/CNAME', critical=True)
 
-# Deploy: orphan branch method
-run('git checkout --orphan temp-gh-pages', critical=True)
-run('git rm -rf . --quiet || true')
-run('cp -r dist/* .', critical=True)
-run('git add .', critical=True)
-run('git commit -m "Deploy"', critical=True)
-run('git push -f origin temp-gh-pages:gh-pages', critical=True)
-run('git checkout main', critical=True)
-run('git branch -D temp-gh-pages', critical=True)
+# Create temp worktree
+temp_dir = ".gh-pages-temp"
+run(f'git worktree remove {temp_dir} --force || true')
+run(f'git worktree add {temp_dir} gh-pages || git worktree add {temp_dir} --orphan', critical=True)
 
-print(c("\n🚀 Deployment complete and verified", "green"))
+# Copy build into temp worktree
+run(f'rm -rf {temp_dir}/*', critical=True)
+run(f'cp -r dist/* {temp_dir}/', critical=True)
+
+# Commit + force push
+run(f'cd {temp_dir} && git add .', critical=True)
+run(f'cd {temp_dir} && git commit -m "Deploy"', critical=True)
+run(f'cd {temp_dir} && git push -f origin HEAD:gh-pages', critical=True)
+
+# Cleanup
+run(f'git worktree remove {temp_dir} --force', critical=True)
+
+print(c("\n🚀 Deployment complete and SAFE", "green"))
