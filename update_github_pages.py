@@ -46,6 +46,9 @@ run('cp dist/index.html dist/404.html')
 # CNAME for GitHub Pages
 run('echo "vue.bookql.com" > dist/CNAME')
 
+# FORCE ADD DIST (important!)
+run('git add -f dist')
+
 # Deploy using split + force
 run('git subtree split --prefix dist -b temp-gh-pages')
 run('git push -f origin temp-gh-pages:gh-pages')
