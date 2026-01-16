@@ -16,12 +16,6 @@ if branch == 'main':
 else:
     print(c(branch, 'red'))
     print('Move changes to the main branch, then switch to the main branch.')
-    print('git stash')
-    print('git checkout main')
-    print('git pull origin main')
-    print(f'git merge {branch}')
-    print('git stash apply')
-    print('git push origin main')
     exit(0)
 
 commit_msg = input("Enter your commit message: ")
@@ -46,12 +40,15 @@ run('cp dist/index.html dist/404.html')
 # CNAME for GitHub Pages
 run('echo "vue.bookql.com" > dist/CNAME')
 
-# FORCE ADD DIST (important!)
-run('git add -f dist')
-
-# Deploy using split + force
-run('git subtree split --prefix dist -b temp-gh-pages')
+# Deploy: hard replace gh-pages with dist contents
+run('git checkout --orphan temp-gh-pages')
+run('git rm -rf . --quiet || true')
+run('rm -rf .gitignore')
+run('cp -r dist/* .')
+run('git add .')
+run('git commit -m "Deploy"')
 run('git push -f origin temp-gh-pages:gh-pages')
+run('git checkout main')
 run('git branch -D temp-gh-pages')
 
 print(c("\nDeployment complete 🚀", "green"))
