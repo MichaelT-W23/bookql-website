@@ -30,6 +30,9 @@ os.system(f'git commit -m "{commit_msg}"')
 os.system('git push origin main')
 os.system('npm run build')
 os.system('cp dist/index.html dist/404.html')
+
+os.system('echo "vue.bookql.com" > dist/CNAME')
+
 os.system('git add dist -f')
 os.system(f'git commit -m "{commit_msg}"')
 os.system('git subtree push --prefix dist origin gh-pages')
