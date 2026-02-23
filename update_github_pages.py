@@ -5,6 +5,10 @@ import sys
 import tempfile
 import shutil
 
+# Fix changes using
+# rm -rf .gh-pages-temp
+# git worktree prune
+
 def run(cmd, critical=False):
     print(c(f"> {cmd}", "cyan"))
     code = os.system(cmd)
