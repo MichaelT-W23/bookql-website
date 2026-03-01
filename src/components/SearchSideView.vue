@@ -7,13 +7,14 @@
     @pointerup="onPointerUp"
     @pointercancel="onPointerUp"
   >
-    <!-- Triangle -->
-    <div class="triangle"></div>
 
     <div class="panel-header">
       <h3 class="panel-title">Search</h3>
 
-      <button class="close-button" @click="$emit('close')">
+      <button 
+        class="close-button"
+        @pointerdown.stop
+        @click="$emit('close')">
         <font-awesome-icon :icon="faTimes" />
       </button>
     </div>
@@ -157,7 +158,6 @@ function onPointerUp(e) {
 
 <style scoped>
 
-/* Main panel */
 .search-panel {
   position: fixed;
   top: 80px;
@@ -179,19 +179,6 @@ function onPointerUp(e) {
   backface-visibility: hidden;
 }
 
-/* Triangle pointer */
-.triangle {
-  position: absolute;
-  top: -10px;
-  right: 35px; /* adjust to center under icon */
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid white;
-}
-
-/* Header */
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -199,12 +186,11 @@ function onPointerUp(e) {
 }
 
 .panel-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   margin: 0;
 }
 
-/* Input */
 .search-input {
   width: 100%;
   margin-top: 15px;
@@ -220,7 +206,6 @@ function onPointerUp(e) {
   border-color: #C06C84;
 }
 
-/* Close */
 .close-button {
   background: none;
   border: none;
@@ -236,7 +221,6 @@ function onPointerUp(e) {
   color: #C06C84;
 }
 
-/* Separator */
 .separator {
   width: 100%;
   height: 2px;
@@ -244,7 +228,6 @@ function onPointerUp(e) {
   margin: 15px 0;
 }
 
-/* Results */
 .results ul {
   list-style: none;
   padding: 0;
@@ -256,7 +239,7 @@ function onPointerUp(e) {
   padding: 12px;
   border-radius: 6px;
   margin-bottom: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
   color: black;
   transition: transform 0.15s ease;
@@ -274,9 +257,9 @@ function onPointerUp(e) {
 .no-results {
   color: teal;
   font-weight: bold;
+  font-size: 16px;
 }
 
-/* Animation */
 @keyframes dropdownFade {
   from {
     opacity: 0;
