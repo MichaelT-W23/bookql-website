@@ -72,7 +72,16 @@ const genres = computed(() => genreResult.value?.getAllGenres || []);
 const selectedGenre = ref("All");
 
 const { result: allBooksResult, loading, error, refetch: refetchAllBooks } = useQuery(GET_ALL_BOOKS);
-const { result: genreBooksResult } = useQuery(GET_BOOKS_BY_GENRE, { genre: selectedGenre });
+const { result: genreBooksResult, refetch: refetchBooksByGenre } =
+  useQuery(
+    GET_BOOKS_BY_GENRE,
+    () => ({
+      genre: selectedGenre.value
+    }),
+    {
+      enabled: computed(() => selectedGenre.value !== "All")
+    }
+  );
 
 const books = computed(() => {
   return selectedGenre.value === "All"
