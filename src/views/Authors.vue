@@ -8,7 +8,7 @@
 
     <ul v-if="authors.length" class="author-list">
       <li v-for="author in authors" :key="author.uuid" class="author-item">
-        <AuthorCard :name="author.name" :details="author" />
+        <AuthorCard :author="author" />
       </li>
     </ul>
   </div>
