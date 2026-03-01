@@ -45,7 +45,7 @@
 
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useQuery, useMutation } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 
@@ -76,7 +76,7 @@ const CREATE_BOOK = gql`
   }
 `;
 
-const { result: authorsResult } = useQuery(GET_ALL_AUTHORS, null, {
+const { result: authorsResult, refetch: refetchAuthors } = useQuery(GET_ALL_AUTHORS, null, {
   onError(err) {
     error.value = err;
   }
@@ -158,6 +158,10 @@ const submitBook = async () => {
     error.value = err;
   }
 };
+
+onMounted(() => {
+  refetchAuthors();
+});
 
 </script>
 

@@ -16,7 +16,7 @@
 
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 import AuthorCard from '../components/AuthorCard.vue';
@@ -38,9 +38,13 @@ const GET_ALL_AUTHORS = gql`
   }
 `;
 
-const { result, loading, error } = useQuery(GET_ALL_AUTHORS);
+const { result, loading, error, refetch } = useQuery(GET_ALL_AUTHORS);
 
 const authors = computed(() => result.value?.getAllAuthors || []);
+
+onMounted(() => {
+  refetch();
+});
 
 </script>
 

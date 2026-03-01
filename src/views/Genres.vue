@@ -26,7 +26,7 @@
 
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 import BookCard from '../components/BookCard.vue';
@@ -66,12 +66,12 @@ const GET_ALL_BOOKS = gql`
 `;
 
 
-const { result: genreResult } = useQuery(GET_ALL_GENRES);
+const { result: genreResult, refetch: refetchGenres } = useQuery(GET_ALL_GENRES);
 const genres = computed(() => genreResult.value?.getAllGenres || []);
 
 const selectedGenre = ref("All");
 
-const { result: allBooksResult, loading, error } = useQuery(GET_ALL_BOOKS);
+const { result: allBooksResult, loading, error, refetch: refetchAllBooks } = useQuery(GET_ALL_BOOKS);
 const { result: genreBooksResult } = useQuery(GET_BOOKS_BY_GENRE, { genre: selectedGenre });
 
 const books = computed(() => {
@@ -86,6 +86,11 @@ watch(selectedGenre, async (newGenre) => {
   } else {
     await refetchBooksByGenre({ genre: newGenre });
   }
+});
+
+onMounted(async () => {
+  await refetchGenres();
+  await refetchAllBooks();
 });
 
 </script>
