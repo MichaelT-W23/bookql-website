@@ -1,5 +1,12 @@
 <template>
-  <div class="search-panel" ref="panelRef">
+  <div
+    class="search-panel"
+    ref="panelRef"
+    @pointerdown="onPointerDown"
+    @pointermove="onPointerMove"
+    @pointerup="onPointerUp"
+    @pointercancel="onPointerUp"
+  >
     <!-- Triangle -->
     <div class="triangle"></div>
 
@@ -39,17 +46,28 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+const emit = defineEmits(['close'])
 
 const searchQuery = ref("")
 const inputRef = ref(null)
 const panelRef = ref(null)
+
+const isDragging = ref(false)
+const startX = ref(0)
+const currentX = ref(0)
+const translateX = ref(0)
+
+const DRAG_THRESHOLD = 120
+let animationFrame = null
+
 
 const GET_ALL_BOOKS = gql`
   query {
@@ -76,35 +94,74 @@ const filteredBooks = computed(() => {
   )
 })
 
-/* Auto focus when opened */
-onMounted(() => {
-  nextTick(() => {
-    inputRef.value?.focus()
-  })
 
+onMounted(() => {
+  nextTick(() => inputRef.value?.focus())
   window.addEventListener("keydown", handleEsc)
 })
 
 onUnmounted(() => {
   window.removeEventListener("keydown", handleEsc)
+  if (animationFrame) cancelAnimationFrame(animationFrame)
 })
 
-const emit = defineEmits(['close'])
-
 function handleEsc(e) {
-  if (e.key === "Escape") {
-    emit('close')
-  }
+  if (e.key === "Escape") emit('close')
 }
+
+function onPointerDown(e) {
+  if (!panelRef.value) return
+
+  isDragging.value = true
+  startX.value = e.clientX
+  panelRef.value.style.transition = "none"
+
+  panelRef.value.setPointerCapture(e.pointerId)
+}
+
+function onPointerMove(e) {
+  if (!isDragging.value || !panelRef.value) return
+
+  currentX.value = e.clientX
+  const diff = currentX.value - startX.value
+
+  if (diff <= 0) return
+
+  translateX.value = diff
+
+  if (animationFrame) cancelAnimationFrame(animationFrame)
+
+  animationFrame = requestAnimationFrame(() => {
+    panelRef.value.style.transform = `translate3d(${diff}px, 0, 0)`
+  })
+}
+
+function onPointerUp(e) {
+  if (!isDragging.value || !panelRef.value) return
+
+  isDragging.value = false
+  panelRef.value.releasePointerCapture(e.pointerId)
+
+  if (translateX.value > DRAG_THRESHOLD) {
+    emit('close')
+  } else {
+    panelRef.value.style.transition = "transform 0.28s cubic-bezier(.22,.61,.36,1)"
+    panelRef.value.style.transform = `translate3d(0px, 0, 0)`
+  }
+
+  translateX.value = 0
+}
+
 </script>
+
 
 <style scoped>
 
 /* Main panel */
 .search-panel {
   position: fixed;
-  top: 80px; /* MUST match navbar height */
-  right: 40px; /* Adjust to align under search icon */
+  top: 80px;
+  right: 40px;
   width: 420px;
   max-height: 450px;
   background: white;
@@ -113,8 +170,13 @@ function handleEsc(e) {
   z-index: 2000;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
-
   animation: dropdownFade 0.18s ease;
+
+  touch-action: none;
+
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 /* Triangle pointer */
