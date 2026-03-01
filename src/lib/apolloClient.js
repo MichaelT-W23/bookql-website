@@ -8,17 +8,3 @@ const apolloClient = new ApolloClient({
 });
 
 export default apolloClient;
-
-
-// import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
-
-// const httpLink = new HttpLink({
-//   uri: 'https://www.general-api.com/bookql/graphql',
-// });
-
-// const apolloClient = new ApolloClient({
-//   link: httpLink,
-//   cache: new InMemoryCache(),
-// });
-
-// export default apolloClient;
