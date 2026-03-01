@@ -11,24 +11,37 @@
           {{ link.name }}
         </router-link>
       </div>
-      <button class="search-button" @click="showModal = true">
+
+      <button class="search-button" @click="openSearch">
         <font-awesome-icon icon="search" />
       </button>
     </div>
   </nav>
 
-  <!-- Modal -->
-  <SearchModal v-if="showModal" @close="showModal = false" />
+  <!-- Overlay -->
+  <div
+    v-if="showSearch"
+    class="overlay"
+    @click="closeSearch"
+  ></div>
+
+  <!-- Side View -->
+  <transition name="slide">
+    <SearchSideView
+      v-if="showSearch"
+      @close="closeSearch"
+    />
+  </transition>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import SearchModal from './SearchModal.vue'; // Import the modal component
+import { ref } from 'vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import SearchSideView from './SearchSideView.vue'
 
-library.add(faSearch);
+library.add(faSearch)
 
 const links = ref([
   { name: 'Books 📚', path: '/' },
@@ -36,9 +49,17 @@ const links = ref([
   { name: 'Genres 🧙🏻‍♂️', path: '/genres' },
   { name: 'Add Book 📘', path: '/add-book' },
   { name: 'Add Author 🖋️', path: '/add-author' }
-]);
+])
 
-const showModal = ref(false);
+const showSearch = ref(false)
+
+const openSearch = () => {
+  showSearch.value = true
+}
+
+const closeSearch = () => {
+  showSearch.value = false
+}
 </script>
 
 <style scoped>
@@ -104,5 +125,28 @@ const showModal = ref(false);
 
 .search-button:hover {
   background-color: #F4A261;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  transform: translateX(0);
 }
 </style>
