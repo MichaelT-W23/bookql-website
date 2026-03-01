@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const graphqlEndpoint = 'https://www.general-api.com/bookql/graphql';
+// const graphqlEndpoint = 'http://localhost:5001/bookql/graphql';
 
 const apolloClient = new ApolloClient({
   uri: graphqlEndpoint,
