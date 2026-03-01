@@ -15,7 +15,7 @@
     <p v-if="error" class="error-text">Error loading books: {{ error.message }}</p>
 
     <ul v-if="books.length" class="book-list">
-      <li v-for="book in books" :key="book.id" class="book-item">
+      <li v-for="book in books" :key="book.uuid" class="book-item">
         <BookCard :title="book.title" :body="book" />
       </li>
     </ul>
@@ -26,7 +26,7 @@
 
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 import BookCard from '../components/BookCard.vue';
@@ -40,7 +40,7 @@ const GET_ALL_GENRES = gql`
 const GET_BOOKS_BY_GENRE = gql`
   query GetBooksByGenre($genre: String!) {
     getBooksByGenre(genre: $genre) {
-      id
+      uuid
       title
       publicationYear
       genre
@@ -54,7 +54,7 @@ const GET_BOOKS_BY_GENRE = gql`
 const GET_ALL_BOOKS = gql`
   query {
     getAllBooks {
-      id
+      uuid
       title
       publicationYear
       genre
@@ -66,14 +66,13 @@ const GET_ALL_BOOKS = gql`
 `;
 
 
-const { result: genreResult, refetch: refetchGenres } = useQuery(GET_ALL_GENRES);
+const { result: genreResult } = useQuery(GET_ALL_GENRES);
 const genres = computed(() => genreResult.value?.getAllGenres || []);
-
 
 const selectedGenre = ref("All");
 
-const { result: allBooksResult, loading, error, refetch: refetchAllBooks } = useQuery(GET_ALL_BOOKS);
-const { result: genreBooksResult, refetch: refetchBooksByGenre } = useQuery(GET_BOOKS_BY_GENRE, { genre: selectedGenre });
+const { result: allBooksResult, loading, error } = useQuery(GET_ALL_BOOKS);
+const { result: genreBooksResult } = useQuery(GET_BOOKS_BY_GENRE, { genre: selectedGenre });
 
 const books = computed(() => {
   return selectedGenre.value === "All"
@@ -87,11 +86,6 @@ watch(selectedGenre, async (newGenre) => {
   } else {
     await refetchBooksByGenre({ genre: newGenre });
   }
-});
-
-onMounted(async () => {
-  await refetchGenres();
-  await refetchAllBooks();
 });
 
 </script>

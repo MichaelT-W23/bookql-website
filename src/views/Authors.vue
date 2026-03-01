@@ -7,7 +7,7 @@
     <p v-if="error" class="error-text">Error loading authors: {{ error.message }}</p>
 
     <ul v-if="authors.length" class="author-list">
-      <li v-for="author in authors" :key="author.id" class="author-item">
+      <li v-for="author in authors" :key="author.uuid" class="author-item">
         <AuthorCard :name="author.name" :details="author" />
       </li>
     </ul>
@@ -16,7 +16,7 @@
 
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 import AuthorCard from '../components/AuthorCard.vue';
@@ -24,12 +24,12 @@ import AuthorCard from '../components/AuthorCard.vue';
 const GET_ALL_AUTHORS = gql`
   query {
     getAllAuthors {
-      id
+      uuid
       name
       age
       nationality
       books {
-        id
+        uuid
         title
         publicationYear
         genre
@@ -38,13 +38,9 @@ const GET_ALL_AUTHORS = gql`
   }
 `;
 
-const { result, loading, error, refetch } = useQuery(GET_ALL_AUTHORS);
+const { result, loading, error } = useQuery(GET_ALL_AUTHORS);
 
 const authors = computed(() => result.value?.getAllAuthors || []);
-
-onMounted(() => {
-  refetch();
-});
 
 </script>
 

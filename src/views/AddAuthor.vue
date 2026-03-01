@@ -37,7 +37,7 @@ const error = ref(null);
 const CREATE_AUTHOR = gql`
   mutation createAuthor($name: String!, $age: Int!, $nationality: String!) {
     createAuthor(name: $name, age: $age, nationality: $nationality) {
-      id
+      uuid
       name
       age
       nationality

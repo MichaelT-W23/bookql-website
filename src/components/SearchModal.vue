@@ -15,7 +15,7 @@
       <div class="separator"></div> 
       <div v-if="filteredBooks.length" class="results">
         <ul>
-          <li v-for="book in filteredBooks" :key="book.id">
+          <li v-for="book in filteredBooks" :key="book.uuid">
             <strong>📚 {{ book.title }}</strong> by {{ book.author.name }} ({{ book.publicationYear }})
           </li>
         </ul>
@@ -46,7 +46,7 @@ const searchPerformed = ref(false);
 const GET_ALL_BOOKS = gql`
   query {
     getAllBooks {
-      id
+      uuid
       title
       publicationYear
       genre

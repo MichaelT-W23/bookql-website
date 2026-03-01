@@ -1,22 +1,30 @@
 <template>
   <div class="author-card">
     <div class="author-info">
-      <h3 class="author-name">{{ name }}</h3>
-      <p><strong>Age:</strong> {{ details.age }}</p>
-      <p><strong>Nationality:</strong> {{ details.nationality }}</p>
+      <h3 class="author-name">{{ author.name }}</h3>
+      <p><strong>Age:</strong> {{ author.age }}</p>
+      <p><strong>Nationality:</strong> {{ author.nationality }}</p>
     </div>
-    
+
     <button class="toggle-books" @click="toggleBooks">
       {{ showBooks ? 'Hide Books' : 'See Books' }}
     </button>
 
     <div v-if="showBooks">
-      <ul v-if="details.books && details.books.length" class="book-list">
-        <li v-for="book in details.books" :key="book.id" class="book-item">
-          <strong>• {{ book.title }}</strong> ({{ book.publicationYear }}) - {{ book.genre }}
+      <ul v-if="author.books?.length" class="book-list">
+        <li
+          v-for="book in author.books"
+          :key="book.uuid"
+          class="book-item"
+        >
+          <strong>• {{ book.title }}</strong>
+          ({{ book.publicationYear }}) - {{ book.genre }}
         </li>
       </ul>
-      <p v-else class="no-books-message">No books were found for this author.</p>
+
+      <p v-else class="no-books-message">
+        No books found for this author.
+      </p>
     </div>
   </div>
 </template>
@@ -26,8 +34,10 @@
 import { ref } from 'vue';
 
 defineProps({
-  name: String,
-  details: Object
+  author: {
+    type: Object,
+    required: true
+  }
 });
 
 const showBooks = ref(false);

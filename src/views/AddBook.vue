@@ -29,8 +29,8 @@
 
       <label>
         Author:
-        <select v-model="selectedAuthorId" required>
-          <option v-for="author in authors" :key="author.id" :value="author.id">
+        <select v-model="selectedAuthorUuid" required>
+          <option v-for="author in authors" :key="author.uuid" :value="author.uuid">
             {{ author.name }}
           </option>
         </select>
@@ -45,7 +45,7 @@
 
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useQuery, useMutation } from '@vue/apollo-composable';
 import gql from "graphql-tag";
 
@@ -55,7 +55,7 @@ const error = ref(null);
 const GET_ALL_AUTHORS = gql`
   query {
     getAllAuthors {
-      id
+      uuid
       name
     }
   }
@@ -68,15 +68,15 @@ const GET_ALL_GENRES = gql`
 `;
 
 const CREATE_BOOK = gql`
-  mutation createBook($title: String!, $publicationYear: Int!, $genre: String!, $authorId: Int!) {
-    createBook(title: $title, publicationYear: $publicationYear, genre: $genre, authorId: $authorId) {
-      id
+  mutation createBook($title: String!, $publicationYear: Int!, $genre: String!, $authorUuid: Int!) {
+    createBook(title: $title, publicationYear: $publicationYear, genre: $genre, authorUuid: $authorUuid) {
+      uuid
       title
     }
   }
 `;
 
-const { result: authorsResult, refetch: refetchAuthors } = useQuery(GET_ALL_AUTHORS, null, {
+const { result: authorsResult } = useQuery(GET_ALL_AUTHORS, null, {
   onError(err) {
     error.value = err;
   }
@@ -103,7 +103,7 @@ const title = ref("");
 const publicationYear = ref(null);
 const selectedGenre = ref("");
 const newGenre = ref("");
-const selectedAuthorId = ref("");
+const selectedAuthorUuid = ref("");
 
 
 const { mutate: createBook } = useMutation(CREATE_BOOK, {
@@ -117,7 +117,7 @@ const isValid = computed(() => {
     title.value.trim() &&
     publicationYear.value &&
     (selectedGenre.value !== "new" || newGenre.value.trim()) &&
-    selectedAuthorId.value
+    selectedAuthorUuid.value
   );
 });
 
@@ -126,7 +126,7 @@ const submitBook = async () => {
   if (!isValid.value) return;
 
   const genre = selectedGenre.value === "new" ? newGenre.value.trim() : selectedGenre.value;
-  const authorId = selectedAuthorId.value;
+  const authorUuid = selectedAuthorUuid.value;
 
   if (!genre) {
     alert("Genre cannot be empty.");
@@ -138,7 +138,7 @@ const submitBook = async () => {
       title: title.value,
       publicationYear: publicationYear.value,
       genre: genre,
-      authorId: authorId,
+      authorUuid: authorUuid,
     });
 
     alert("Book added successfully!");
@@ -151,17 +151,13 @@ const submitBook = async () => {
     publicationYear.value = null;
     selectedGenre.value = "";
     newGenre.value = "";
-    selectedAuthorId.value = "";
+    selectedAuthorUuid.value = "";
 
     error.value = null; 
   } catch (err) {
     error.value = err;
   }
 };
-
-onMounted(() => {
-  refetchAuthors();
-});
 
 </script>
 

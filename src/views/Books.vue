@@ -7,7 +7,7 @@
     <p v-if="error" class="error-text">Error loading books: {{ error.message }}</p>
 
     <ul v-if="books.length" class="book-list">
-      <li v-for="book in books" :key="book.id" class="book-item">
+      <li v-for="book in books" :key="book.uuid" class="book-item">
         <BookCard :title="book.title" :body="book" />
       </li>
     </ul>
@@ -24,7 +24,7 @@ import BookCard from '../components/BookCard.vue';
 const GET_ALL_BOOKS = gql`
   query {
     getAllBooks {
-      id
+      uuid
       title
       publicationYear
       genre

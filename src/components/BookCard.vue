@@ -1,22 +1,24 @@
 <template>
   <div class="book-card">
     <div class="book-title-container">
-      <h3 class="book-title">{{ title }}</h3>
+      <h3 class="book-title">{{ book.title }}</h3>
     </div>
+
     <div class="book-details">
-      <p><strong>Author:</strong> {{ body.author.name }} </p>
-      <p><strong>Publication Year:</strong> {{ body.publicationYear }}</p>
-      <p><strong>Genre:</strong> {{ body.genre }}</p>
+      <p><strong>Author:</strong> {{ book.author?.name || 'Unknown' }}</p>
+      <p><strong>Publication Year:</strong> {{ book.publicationYear }}</p>
+      <p><strong>Genre:</strong> {{ book.genre }}</p>
     </div>
   </div>
 </template>
 
 
 <script setup>
-
 defineProps({
-  title: String,
-  body: Object
+  book: {
+    type: Object,
+    required: true
+  }
 });
 
 </script>
