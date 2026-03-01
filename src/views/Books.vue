@@ -8,7 +8,7 @@
 
     <ul v-if="books.length" class="book-list">
       <li v-for="book in books" :key="book.uuid" class="book-item">
-        <BookCard :title="book.title" :body="book" />
+        <BookCard :book="book" />
       </li>
     </ul>
   </div>
