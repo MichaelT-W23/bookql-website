@@ -26,12 +26,10 @@
   ></div>
 
   <!-- Side View -->
-  <transition name="slide">
-    <SearchSideView
-      v-if="showSearch"
-      @close="closeSearch"
-    />
-  </transition>
+  <NewSearchModal
+    v-if="showSearch"
+    @close="closeSearch"
+  />
 </template>
 
 <script setup>
@@ -39,7 +37,7 @@ import { ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import SearchSideView from './SearchSideView.vue'
+import NewSearchModal from './NewSearchModal.vue'
 
 library.add(faSearch)
 
@@ -135,18 +133,4 @@ const closeSearch = () => {
   z-index: 900;
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
-}
-
-.slide-enter-to,
-.slide-leave-from {
-  transform: translateX(0);
-}
 </style>

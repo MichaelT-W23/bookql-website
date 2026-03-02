@@ -1,20 +1,12 @@
 <template>
-  <div
-    class="search-panel"
-    ref="panelRef"
-    @pointerdown="onPointerDown"
-    @pointermove="onPointerMove"
-    @pointerup="onPointerUp"
-    @pointercancel="onPointerUp"
-  >
-
+  <div class="search-panel">
     <div class="panel-header">
       <h3 class="panel-title">Search</h3>
 
-      <button 
+      <button
         class="close-button"
-        @pointerdown.stop
-        @click="$emit('close')">
+        @click="$emit('close')"
+      >
         <font-awesome-icon :icon="faTimes" />
       </button>
     </div>
@@ -47,7 +39,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
@@ -59,16 +50,6 @@ const emit = defineEmits(['close'])
 
 const searchQuery = ref("")
 const inputRef = ref(null)
-const panelRef = ref(null)
-
-const isDragging = ref(false)
-const startX = ref(0)
-const currentX = ref(0)
-const translateX = ref(0)
-
-const DRAG_THRESHOLD = 120
-let animationFrame = null
-
 
 const GET_ALL_BOOKS = gql`
   query {
@@ -89,12 +70,13 @@ const { result } = useQuery(GET_ALL_BOOKS)
 const filteredBooks = computed(() => {
   if (!result.value || !searchQuery.value) return []
 
+  const query = searchQuery.value.toLowerCase()
+
   return result.value.getAllBooks.filter(book =>
-    book.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    book.author.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    book.title.toLowerCase().includes(query) ||
+    book.author.name.toLowerCase().includes(query)
   )
 })
-
 
 onMounted(() => {
   nextTick(() => inputRef.value?.focus())
@@ -103,65 +85,22 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener("keydown", handleEsc)
-  if (animationFrame) cancelAnimationFrame(animationFrame)
 })
 
 function handleEsc(e) {
-  if (e.key === "Escape") emit('close')
-}
-
-function onPointerDown(e) {
-  if (!panelRef.value) return
-
-  isDragging.value = true
-  startX.value = e.clientX
-  panelRef.value.style.transition = "none"
-
-  panelRef.value.setPointerCapture(e.pointerId)
-}
-
-function onPointerMove(e) {
-  if (!isDragging.value || !panelRef.value) return
-
-  currentX.value = e.clientX
-  const diff = currentX.value - startX.value
-
-  if (diff <= 0) return
-
-  translateX.value = diff
-
-  if (animationFrame) cancelAnimationFrame(animationFrame)
-
-  animationFrame = requestAnimationFrame(() => {
-    panelRef.value.style.transform = `translate3d(${diff}px, 0, 0)`
-  })
-}
-
-function onPointerUp(e) {
-  if (!isDragging.value || !panelRef.value) return
-
-  isDragging.value = false
-  panelRef.value.releasePointerCapture(e.pointerId)
-
-  if (translateX.value > DRAG_THRESHOLD) {
+  if (e.key === "Escape") {
     emit('close')
-  } else {
-    panelRef.value.style.transition = "transform 0.28s cubic-bezier(.22,.61,.36,1)"
-    panelRef.value.style.transform = `translate3d(0px, 0, 0)`
   }
-
-  translateX.value = 0
 }
-
 </script>
-
 
 <style scoped>
 
 .search-panel {
   position: fixed;
-  top: 80px;
-  right: 40px;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 420px;
   max-height: 450px;
   background: white;
@@ -170,13 +109,6 @@ function onPointerUp(e) {
   z-index: 2000;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
-  animation: dropdownFade 0.18s ease;
-
-  touch-action: none;
-
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
 }
 
 .panel-header {
@@ -242,12 +174,11 @@ function onPointerUp(e) {
   font-size: 16px;
   font-weight: bold;
   color: black;
-  transition: transform 0.15s ease;
   cursor: pointer;
 }
 
 .results li:hover {
-  transform: translateX(4px);
+  background: #4e95be;
 }
 
 .author {
@@ -258,17 +189,6 @@ function onPointerUp(e) {
   color: teal;
   font-weight: bold;
   font-size: 16px;
-}
-
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 </style>
