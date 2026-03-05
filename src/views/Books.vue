@@ -54,8 +54,7 @@ const books = computed(() => result.value?.getAllBooks || []);
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
-  /* color: #333; */
-  color: blue;
+  color: #333;
   text-align: center;
   position: relative;
   letter-spacing: 1px;
