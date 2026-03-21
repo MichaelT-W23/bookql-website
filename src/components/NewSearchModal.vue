@@ -11,13 +11,23 @@
       </button>
     </div>
 
-    <input
-      ref="inputRef"
-      v-model="searchQuery"
-      type="text"
-      class="search-input"
-      placeholder="Search by title or author..."
-    />
+    <div class="input-wrapper">
+      <input
+        ref="inputRef"
+        v-model="searchQuery"
+        type="text"
+        class="search-input"
+        placeholder="Search by title or author..."
+      />
+
+      <button
+        v-if="searchQuery"
+        class="clear-button"
+        @click="clearSearch"
+      >
+        <font-awesome-icon :icon="faTimes" />
+      </button>
+    </div>
 
     <div class="separator"></div>
 
@@ -38,6 +48,7 @@
     </p>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
@@ -92,7 +103,14 @@ function handleEsc(e) {
     emit('close')
   }
 }
+
+function clearSearch() {
+  searchQuery.value = ""
+  inputRef.value?.focus()
+}
+
 </script>
+
 
 <style scoped>
 
@@ -101,13 +119,20 @@ function handleEsc(e) {
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
+  
   width: 420px;
-  max-height: 450px;
+  max-height: calc(100vh - 140px);
+
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 20px;
   z-index: 2000;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+
+  display: flex;
+  flex-direction: column;
+
   overflow-y: auto;
 }
 
@@ -123,10 +148,15 @@ function handleEsc(e) {
   margin: 0;
 }
 
-.search-input {
+.input-wrapper {
+  position: relative;
   width: 100%;
   margin-top: 15px;
-  padding: 10px 12px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
   border-radius: 6px;
   border: 1px solid #ddd;
   font-size: 16px;
@@ -138,15 +168,60 @@ function handleEsc(e) {
   border-color: #C06C84;
 }
 
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  font-size: 17px;
+  transform: translateY(-50%);
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+
+  transition: all 0.2s ease;
+}
+
+.clear-button svg {
+  color: #999;
+  transition: color 0.2s ease;
+}
+
+/* .clear-button:hover svg {
+  color: red; 
+} */
+
 .close-button {
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
+
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
 .close-button svg {
   color: #333;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(192, 108, 132, 0.15);
 }
 
 .close-button:hover svg {
@@ -158,6 +233,12 @@ function handleEsc(e) {
   height: 2px;
   background: #eee;
   margin: 15px 0;
+}
+
+.results {
+  overflow-y: auto;
+  max-height: 300px;
+  padding-right: 5px;
 }
 
 .results ul {
